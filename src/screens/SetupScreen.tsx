@@ -5,6 +5,7 @@ import { DEFAULT_CONFIG } from '../game/reducer'
 
 const DURASI_PILIHAN = [30, 60, 90, 120]
 const KARTU_PILIHAN = [5, 10, 15, 20]
+const BABAK_PILIHAN = [1, 2, 3, 4]
 
 type Props = {
   onStart: (teamNames: string[], config: Config) => void
@@ -15,6 +16,7 @@ export function SetupScreen({ onStart }: Props) {
   const [categoryIds, setCategoryIds] = useState<CategoryId[]>(ALL_CATEGORY_IDS)
   const [durationSec, setDurationSec] = useState(DEFAULT_CONFIG.durationSec)
   const [maxCards, setMaxCards] = useState(DEFAULT_CONFIG.maxCards)
+  const [rounds, setRounds] = useState(DEFAULT_CONFIG.rounds)
 
   const semuaDipilih = categoryIds.length === ALL_CATEGORY_IDS.length
   const namaBersih = teamNames.map((n) => n.trim()).filter(Boolean)
@@ -125,10 +127,27 @@ export function SetupScreen({ onStart }: Props) {
           </Bagian>
         </div>
 
+        <Bagian
+          judul="Babak"
+          catatan={rounds > 1 ? 'tiap tim main ' + rounds + '×' : 'tiap tim main sekali'}
+        >
+          <div className="flex flex-wrap gap-2">
+            {BABAK_PILIHAN.map((b) => (
+              <Chip key={b} aktif={rounds === b} onClick={() => setRounds(b)}>
+                {b} babak
+              </Chip>
+            ))}
+          </div>
+          <p className="mt-2 text-sm text-kertas/40">
+            Lebih dari satu babak biar penebak dan pemberi petunjuk bisa tukar posisi.
+            Giliran selang-seling, skornya diakumulasi.
+          </p>
+        </Bagian>
+
         <button
           type="button"
           disabled={!bisaMulai}
-          onClick={() => onStart(namaBersih, { durationSec, maxCards, categoryIds })}
+          onClick={() => onStart(namaBersih, { durationSec, maxCards, categoryIds, rounds })}
           className="tekan-terang w-full rounded-2xl border-4 border-kertas bg-kuning py-5 font-display text-3xl tracking-wide text-ink transition-transform active:translate-x-1 active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-30 sm:text-4xl"
         >
           MULAI MAIN

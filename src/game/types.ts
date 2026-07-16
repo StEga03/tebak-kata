@@ -33,6 +33,9 @@ export type Config = {
   durationSec: number
   maxCards: number
   categoryIds: CategoryId[]
+  /** Berapa kali tiap tim dapat giliran. Lebih dari 1 dipakai buat tukar posisi
+   *  penebak dan pemberi petunjuk di babak berikutnya. */
+  rounds: number
 }
 
 export type Phase = 'setup' | 'ready' | 'playing' | 'roundEnd' | 'finished'
@@ -42,6 +45,8 @@ export type GameState = {
   config: Config
   teams: Team[]
   currentTeamIndex: number
+  /** Babak yang lagi jalan, mulai dari 1. */
+  currentRound: number
   deck: Deck
   currentCard: Card | null
   roundScore: number

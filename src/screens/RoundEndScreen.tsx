@@ -3,11 +3,11 @@ import type { Team } from '../game/types'
 type Props = {
   team: Team
   roundScore: number
-  isLastTeam: boolean
+  isLastTurn: boolean
   onNext: () => void
 }
 
-export function RoundEndScreen({ team, roundScore, isLastTeam, onNext }: Props) {
+export function RoundEndScreen({ team, roundScore, isLastTurn, onNext }: Props) {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-8 px-6 text-center">
       <div>
@@ -29,7 +29,7 @@ export function RoundEndScreen({ team, roundScore, isLastTeam, onNext }: Props) 
         onClick={onNext}
         className="tekan-terang rounded-2xl border-4 border-kertas bg-kuning px-10 py-4 font-display text-2xl tracking-wide text-ink transition-transform active:translate-x-1 active:translate-y-1 active:shadow-none sm:text-3xl"
       >
-        {isLastTeam ? 'LIHAT HASIL' : 'TIM BERIKUTNYA'}
+        {isLastTurn ? 'LIHAT HASIL' : 'LANJUT'}
       </button>
     </div>
   )

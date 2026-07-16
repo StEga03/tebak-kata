@@ -6,6 +6,8 @@ export const DEFAULT_CONFIG = {
   durationSec: 60,
   maxCards: 10,
   categoryIds: ALL_CATEGORY_IDS,
+  // Default 2 biar penebak dan pemberi petunjuk bisa tukar posisi di babak ke-2.
+  rounds: 2,
 }
 
 export const initialState: GameState = {
@@ -13,6 +15,7 @@ export const initialState: GameState = {
   config: DEFAULT_CONFIG,
   teams: [],
   currentTeamIndex: 0,
+  currentRound: 1,
   deck: { order: [], cursor: 0 },
   currentCard: null,
   roundScore: 0,
@@ -96,9 +99,16 @@ export function reducer(state: GameState, action: Action): GameState {
     }
 
     case 'NEXT_TEAM': {
+      // Selang-seling: semua tim main dulu di babak ini, baru lanjut babak berikutnya.
       const nextIndex = state.currentTeamIndex + 1
-      if (nextIndex >= state.teams.length) return { ...state, phase: 'finished' }
-      return { ...state, phase: 'ready', currentTeamIndex: nextIndex }
+      if (nextIndex < state.teams.length) {
+        return { ...state, phase: 'ready', currentTeamIndex: nextIndex }
+      }
+
+      const nextRound = state.currentRound + 1
+      if (nextRound > state.config.rounds) return { ...state, phase: 'finished' }
+
+      return { ...state, phase: 'ready', currentTeamIndex: 0, currentRound: nextRound }
     }
 
     case 'RESET':

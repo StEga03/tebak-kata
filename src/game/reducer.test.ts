@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest'
 import { initialState, reducer } from './reducer'
 import type { Action, Config, GameState } from './types'
 
-const config: Config = { durationSec: 10, maxCards: 3, categoryIds: ['benda'] }
+const config: Config = { durationSec: 10, maxCards: 3, categoryIds: ['benda'], rounds: 1 }
 
-const startedSession = (): GameState =>
-  reducer(initialState, { type: 'START_SESSION', teamNames: ['Tim A', 'Tim B'], config })
+const startedSession = (cfg: Config = config): GameState =>
+  reducer(initialState, { type: 'START_SESSION', teamNames: ['Tim A', 'Tim B'], config: cfg })
 
 const startedRound = (): GameState => reducer(startedSession(), { type: 'START_ROUND' })
 
@@ -143,6 +143,79 @@ describe('giliran tim', () => {
 
     expect(seen).toHaveLength(6)
     expect(new Set(seen).size).toBe(6)
+  })
+})
+
+describe('babak', () => {
+  const duaBabak: Config = { ...config, rounds: 2 }
+  const habiskanRonde: Action[] = [
+    { type: 'START_ROUND' },
+    { type: 'CORRECT' },
+    { type: 'CORRECT' },
+    { type: 'CORRECT' },
+    { type: 'NEXT_TEAM' },
+  ]
+
+  it('mulai dari babak 1', () => {
+    expect(startedSession(duaBabak).currentRound).toBe(1)
+  })
+
+  it('giliran selang-seling: A1, B1, A2, B2', () => {
+    let state = startedSession(duaBabak)
+    const urutan: string[] = []
+
+    for (let i = 0; i < 4; i++) {
+      urutan.push(`${state.teams[state.currentTeamIndex].name} babak ${state.currentRound}`)
+      state = apply(state, habiskanRonde)
+    }
+
+    expect(urutan).toEqual([
+      'Tim A babak 1',
+      'Tim B babak 1',
+      'Tim A babak 2',
+      'Tim B babak 2',
+    ])
+  })
+
+  it('belum selesai setelah tim terakhir main di babak 1', () => {
+    const state = apply(startedSession(duaBabak), [...habiskanRonde, ...habiskanRonde])
+
+    expect(state.phase).toBe('ready')
+    expect(state.currentRound).toBe(2)
+    expect(state.currentTeamIndex).toBe(0)
+  })
+
+  it('selesai setelah tim terakhir main di babak terakhir', () => {
+    let state = startedSession(duaBabak)
+    for (let i = 0; i < 4; i++) state = apply(state, habiskanRonde)
+
+    expect(state.phase).toBe('finished')
+  })
+
+  it('skor dua babak diakumulasi ke tim yang sama', () => {
+    let state = startedSession(duaBabak)
+    for (let i = 0; i < 4; i++) state = apply(state, habiskanRonde)
+
+    expect(state.teams[0].total).toBe(6)
+    expect(state.teams[1].total).toBe(6)
+  })
+
+  it('kartu nggak keulang lintas babak', () => {
+    // Tukar posisi cuma adil kalau babak 2 dapat kartu yang belum pernah kesebut.
+    let state = startedSession(duaBabak)
+    const seen: string[] = []
+
+    for (let i = 0; i < 4; i++) {
+      state = reducer(state, { type: 'START_ROUND' })
+      for (let n = 0; n < config.maxCards; n++) {
+        seen.push(state.currentCard!.id)
+        state = reducer(state, { type: 'CORRECT' })
+      }
+      state = reducer(state, { type: 'NEXT_TEAM' })
+    }
+
+    expect(seen).toHaveLength(12)
+    expect(new Set(seen).size).toBe(12)
   })
 })
 

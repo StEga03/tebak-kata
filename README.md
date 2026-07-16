@@ -13,6 +13,8 @@ Butuh 3 peran (peran 2 dan 3 boleh dirangkap orang yang sama):
 
 Ronde berhenti kalau waktu habis **atau** kartunya sudah mentok — mana pun yang duluan. Benar dapat 1 poin, lewat nggak dihukum. Tiap tim main bergantian, skornya diakumulasi, pemenangnya muncul di akhir.
 
+**Babak** dipakai buat tukar posisi: default 2 babak, jadi tiap tim dapat giliran dua kali dan di babak ke-2 penebak gantian sama pemberi petunjuk. Gilirannya selang-seling (A1 → B1 → A2 → B2), dan kartunya nggak pernah keulang antar babak — jadi orang kedua nggak dapat kata bekas yang tadi sudah kesebut.
+
 **Layar kuning = ronde lagi jalan.** Kelihatan dari seberang ruangan.
 
 ## Nambah kata

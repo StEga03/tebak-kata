@@ -29,8 +29,10 @@ export default function App() {
       return (
         <ReadyScreen
           team={state.teams[state.currentTeamIndex]}
-          roundNumber={state.currentTeamIndex + 1}
+          teamNumber={state.currentTeamIndex + 1}
           totalTeams={state.teams.length}
+          round={state.currentRound}
+          totalRounds={state.config.rounds}
           onStart={() => dispatch({ type: 'START_ROUND' })}
         />
       )
@@ -53,7 +55,10 @@ export default function App() {
         <RoundEndScreen
           team={state.teams[state.currentTeamIndex]}
           roundScore={state.roundScore}
-          isLastTeam={state.currentTeamIndex === state.teams.length - 1}
+          isLastTurn={
+            state.currentTeamIndex === state.teams.length - 1 &&
+            state.currentRound === state.config.rounds
+          }
           onNext={() => dispatch({ type: 'NEXT_TEAM' })}
         />
       )

@@ -1,0 +1,68 @@
+@import 'tailwindcss';
+@import '@fontsource/anton/400.css';
+@import '@fontsource-variable/plus-jakarta-sans';
+
+@theme {
+  --color-kuning: #ffd400;
+  --color-kuning-tua: #e0b800;
+  --color-ink: #14110d;
+  --color-ink-muda: #2b2620;
+  --color-hijau: #00a651;
+  --color-merah: #e23e2e;
+  --color-kertas: #fbf6e9;
+
+  --font-display: 'Anton', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-kertas);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    /* Game dimainkan sambil tab dipegang & di-tap cepat — matikan zoom, seleksi
+       teks, dan bounce scroll biar nggak ada yang nyantol nggak sengaja. */
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-kuning);
+    outline-offset: 2px;
+  }
+}
+
+/* Bayangan keras tanpa blur — bahasa visual stiker/spanduk. */
+@utility tekan {
+  box-shadow: 4px 4px 0 var(--color-ink);
+}
+
+@utility tekan-terang {
+  box-shadow: 4px 4px 0 var(--color-kertas);
+}
+
+@keyframes denyut {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

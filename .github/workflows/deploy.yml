@@ -38,10 +38,6 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
-        with:
-          # Bikin Pages nyala sendiri kalau belum, jadi repo fresh nggak perlu
-          # diklik manual dulu di Settings.
-          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
